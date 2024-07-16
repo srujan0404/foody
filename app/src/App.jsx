@@ -1,12 +1,18 @@
 import { useEffect, useState } from "react";
 import styled from "styled-components";
 import SearchResult from "./components/SearchResults/SearchResult";
+import UserList from "./components/UserList";
+import PostDetail from "./components/PostDetail";
+import NotificationList from "./components/NotificationList";
 
 export const BASE_URL = "http://localhost:9000";
 
 const App = () => {
   const [data, setData] = useState(null);
   const [filteredData, setFilteredData] = useState(null);
+  const [users, setUsers] = useState(null);
+  const [posts, setPosts] = useState(null);
+  const [notifications, setNotifications] = useState(null);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
   const [selectedBtn, setSelectedBtn] = useState("all");
@@ -25,9 +31,50 @@ const App = () => {
         setLoading(false);
       } catch (error) {
         setError("Unable to fetch data");
+        setLoading(false);
       }
     };
+
+    const fetchUserData = async () => {
+      try {
+        const response = await fetch(`${BASE_URL}/users`);
+
+        const json = await response.json();
+
+        setUsers(json);
+      } catch (error) {
+        setError("Unable to fetch user data");
+      }
+    };
+
+    const fetchPostData = async () => {
+      try {
+        const response = await fetch(`${BASE_URL}/posts`);
+
+        const json = await response.json();
+
+        setPosts(json);
+      } catch (error) {
+        setError("Unable to fetch post data");
+      }
+    };
+
+    const fetchNotificationData = async () => {
+      try {
+        const response = await fetch(`${BASE_URL}/notifications`);
+
+        const json = await response.json();
+
+        setNotifications(json);
+      } catch (error) {
+        setError("Unable to fetch notification data");
+      }
+    };
+
     fetchFoodData();
+    fetchUserData();
+    fetchPostData();
+    fetchNotificationData();
   }, []);
 
   const searchFood = (e) => {
@@ -36,13 +83,13 @@ const App = () => {
     console.log(searchValue);
 
     if (searchValue === "") {
-      setFilteredData(null);
+      setFilteredData(data);
+    } else {
+      const filter = data?.filter((food) =>
+        food.name.toLowerCase().includes(searchValue.toLowerCase())
+      );
+      setFilteredData(filter);
     }
-
-    const filter = data?.filter((food) =>
-      food.name.toLowerCase().includes(searchValue.toLowerCase())
-    );
-    setFilteredData(filter);
   };
 
   const filterFood = (type) => {
@@ -79,7 +126,7 @@ const App = () => {
   ];
 
   if (error) return <div>{error}</div>;
-  if (loading) return <div>loading.....</div>;
+  if (loading) return <div>Loading...</div>;
 
   return (
     <>
@@ -107,6 +154,9 @@ const App = () => {
         </FilterContainer>
       </Container>
       <SearchResult data={filteredData} />
+      <UserList users={users} />
+      {posts && posts.length > 0 && <PostDetail post={posts[0]} />}
+      <NotificationList notifications={notifications} />
     </>
   );
 };
