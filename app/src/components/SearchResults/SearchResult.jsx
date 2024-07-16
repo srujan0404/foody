@@ -1,5 +1,6 @@
 import styled from "styled-components";
 import { BASE_URL, Button, Container } from "../../App";
+
 const SearchResult = ({ data }) => {
   return (
     <FoodCardContainer>
@@ -8,7 +9,7 @@ const SearchResult = ({ data }) => {
           {data?.map(({ name, image, text, price }) => (
             <FoodCard key={name}>
               <div className="food_image">
-                <img src={BASE_URL + image} />
+                <img src={BASE_URL + image} alt={name} />
               </div>
               <div className="food_info">
                 <div className="info">
@@ -26,67 +27,78 @@ const SearchResult = ({ data }) => {
 };
 
 export default SearchResult;
+
 const FoodCardContainer = styled.section`
   min-height: calc(100vh - 210px);
   background-image: url("/bg.png");
   background-size: cover;
+  padding: 20px;
 `;
+
 const FoodCards = styled.div`
   display: flex;
   flex-wrap: wrap;
-  row-gap: 32px;
-  column-gap: 20px;
+  gap: 20px;
   justify-content: center;
   align-items: center;
   padding-top: 80px;
 `;
+
 const FoodCard = styled.div`
   width: 340px;
-  height: 167px;
-  border: 0.66px solid;
-
-  border-image-source: radial-gradient(
-      80.69% 208.78% at 108.28% 112.58%,
-      #eabfff 0%,
-      rgba(135, 38, 183, 0) 100%
-    ),
-    radial-gradient(
-      80.38% 222.5% at -13.75% -12.36%,
-      #98f9ff 0%,
-      rgba(255, 255, 255, 0) 100%
-    );
-
-  background: url(.png),
-    radial-gradient(
-      90.16% 143.01% at 15.32% 21.04%,
-      rgba(165, 239, 255, 0.2) 0%,
-      rgba(110, 191, 244, 0.0447917) 77.08%,
-      rgba(70, 144, 213, 0) 100%
-    );
-  background-blend-mode: overlay, normal;
-  backdrop-filter: blur(13.1842px);
-
+  height: auto;
+  border: 1px solid transparent;
   border-radius: 20px;
+  background: linear-gradient(
+    135deg,
+    rgba(255, 255, 255, 0.2) 0%,
+    rgba(255, 255, 255, 0.1) 100%
+  );
+  backdrop-filter: blur(10px);
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+  overflow: hidden;
 
-  display: flex;
-  padding: 8px;
+  .food_image img {
+    width: 100%;
+    height: auto;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.2);
+  }
 
   .food_info {
     display: flex;
     flex-direction: column;
     justify-content: space-between;
-    align-items: end;
+    padding: 16px;
+    background: rgba(255, 255, 255, 0.1);
+    border-radius: 0 0 20px 20px;
+
     h3 {
-      margin-top: 8px;
-      font-size: 16px;
-      font-weight: 500;
+      margin: 8px 0;
+      font-size: 18px;
+      font-weight: 600;
+      color: #333;
     }
+
     p {
-      margin-top: 4px;
-      font-size: 12px;
+      margin: 4px 0 8px;
+      font-size: 14px;
+      color: #666;
     }
+
     button {
-      font-size: 12px;
+      align-self: flex-end;
+      font-size: 14px;
+      padding: 8px 16px;
+      border-radius: 12px;
+      background: #ff7e5f;
+      color: #fff;
+      border: none;
+      cursor: pointer;
+      transition: background 0.3s;
+
+      &:hover {
+        background: #ff5f5f;
+      }
     }
   }
 `;
